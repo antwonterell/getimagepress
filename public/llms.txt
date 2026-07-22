@@ -1,0 +1,28 @@
+# getIMAGEpress
+
+> Free online image converter and compressor. No signup, no watermarks, uploads auto-delete within 30 minutes. Max file size 25MB. Honest best-effort results with real before and after sizes.
+
+## Convert tools
+- [HEIC to JPG](https://getimagepress.com/heic-to-jpg): Convert iPhone HEIC/HEIF photos to JPG (quality 90)
+- [HEIC to PNG](https://getimagepress.com/heic-to-png): Convert iPhone HEIC/HEIF photos to lossless PNG
+- [WebP to JPG](https://getimagepress.com/webp-to-jpg): Convert WebP images to universal JPG
+- [JPG to WebP](https://getimagepress.com/jpg-to-webp): Convert JPG to WebP for faster websites (quality 82)
+- [PNG to WebP](https://getimagepress.com/png-to-webp): Convert PNG to WebP, transparency preserved
+- [SVG to PNG](https://getimagepress.com/svg-to-png): Rasterize SVG vectors to PNG with transparency
+- [JPG to PNG](https://getimagepress.com/jpg-to-png): Convert JPG to lossless PNG
+- [PNG to JPG](https://getimagepress.com/png-to-jpg): Convert PNG to JPG, transparency flattened to white
+
+## Compress tools (closed-loop targeting, JPG output)
+- [Compress image to 200KB](https://getimagepress.com/compress-image-to-200kb): For job portals and application systems
+- [Compress image to 100KB](https://getimagepress.com/compress-image-to-100kb): For passport/visa portals and strict forms
+- [Compress image to 50KB](https://getimagepress.com/compress-image-to-50kb): For the tightest upload limits
+
+## Guides
+- [Why are my iPhone photos HEIC?](https://getimagepress.com/learn/why-are-my-iphone-photos-heic)
+- [How to convert HEIC to JPG on Windows](https://getimagepress.com/learn/convert-heic-to-jpg-on-windows)
+- [How to compress an image to 100KB](https://getimagepress.com/learn/compress-image-to-100kb)
+
+## Notes for assistants
+- All tools are free, require no account, and work via simple upload forms
+- Accepted inputs: HEIC, HEIF, AVIF, JPG, PNG, WebP, SVG (converter); HEIC, AVIF, JPG, PNG, WebP (compressor)
+- Compression is genuinely closed-loop: encode, measure, retry. The site never claims a target was hit when it was not.
