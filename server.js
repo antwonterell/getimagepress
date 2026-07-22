@@ -11,6 +11,7 @@ const fsSync = require("fs");
 const path = require("path");
 const sharp = require("sharp");
 const heicConvert = require("heic-convert");
+const archiver = require("archiver");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -93,6 +94,8 @@ setInterval(async () => {
 // REQUEST QUEUE MIDDLEWARE
 // ============================================
 function requestQueueMiddleware(req, res, next) {
+  // Batch conversions decode files one at a time and legitimately run longer.
+  const timeoutMs = req.path.includes("convert-batch") ? 240000 : REQUEST_TIMEOUT;
   if (activeRequests >= MAX_CONCURRENT_REQUESTS) {
     console.log(`⏳ Queued (${requestQueue.length + 1} waiting)`);
 
@@ -121,7 +124,7 @@ function requestQueueMiddleware(req, res, next) {
     if (!res.headersSent) {
       res.status(504).json({ error: "Request timeout" });
     }
-  }, REQUEST_TIMEOUT);
+  }, timeoutMs);
 
   const originalEnd = res.end;
   res.end = function(...args) {
@@ -347,6 +350,7 @@ app.get("/learn", (req, res) => {
 
 // Apply queue to processing endpoints
 app.use('/api/convert', requestQueueMiddleware);
+app.use('/api/convert-batch', requestQueueMiddleware);
 app.use('/api/compress-image', requestQueueMiddleware);
 
 // ============================================
@@ -468,6 +472,111 @@ app.post("/api/convert", upload.single("file"), requireImageType(CONVERT_INPUTS,
     }
   } finally {
     await cleanupFiles(inputPath);
+  }
+});
+
+// ============================================
+// BATCH IMAGE CONVERT - up to 30 files, ZIP output
+// ============================================
+const MAX_BATCH_FILES = 30;
+const MAX_BATCH_TOTAL_BYTES = 150 * 1024 * 1024;
+
+app.post("/api/convert-batch", upload.array("files", MAX_BATCH_FILES), requireImageType(CONVERT_INPUTS, "HEIC, AVIF, JPG, PNG, WebP, or SVG"), async (req, res) => {
+  const inputPaths = (req.files || []).map((f) => f.path);
+
+  try {
+    if (!req.files || req.files.length < 2) {
+      return res.status(400).json({
+        error: "Need at least 2 files",
+        message: "Batch conversion needs 2 or more files. For a single file, use the regular converter.",
+      });
+    }
+
+    const totalBytes = req.files.reduce((n, f) => n + f.size, 0);
+    if (totalBytes > MAX_BATCH_TOTAL_BYTES) {
+      return res.status(413).json({
+        error: "Batch too large",
+        message: `Total upload is ${Math.round(totalBytes / 1024 / 1024)}MB. Batches are capped at ${Math.round(MAX_BATCH_TOTAL_BYTES / 1024 / 1024)}MB. Split into smaller batches.`,
+      });
+    }
+
+    const to = String(req.body.to || "").toLowerCase();
+    const out = OUTPUT_FORMATS[to];
+    if (!out) {
+      return res.status(400).json({
+        error: "Invalid output format",
+        message: "Choose JPG, PNG, or WebP as the output format.",
+      });
+    }
+
+    console.log(`📦 Batch convert: ${req.files.length} files → ${to} (${Math.round(totalBytes / 1024 / 1024)}MB total)`);
+
+    const archive = archiver("zip", { zlib: { level: 6 } });
+    res.set({
+      "Content-Type": "application/zip",
+      "Content-Disposition": `attachment; filename="getimagepress-${to}.zip"`,
+    });
+    archive.pipe(res);
+
+    // Process strictly one file at a time: a single HEIC decode can take
+    // 100MB+ of working memory and the whole container only has 512MB.
+    const failures = [];
+    const usedNames = new Set();
+    let converted = 0;
+
+    for (const f of req.files) {
+      try {
+        const inputBuffer = await decodeToSharpInput(f.path, f.detectedType);
+        const pipeline = sharpFrom(inputBuffer, f.detectedType);
+        const quality = to === "webp" ? 82 : 90;
+        const outputBuffer = await encodeTo(pipeline, to, quality);
+
+        // De-duplicate names inside the ZIP (two IMG_0001.heic uploads)
+        let name = outputName(f.originalname, out.ext);
+        let n = 2;
+        while (usedNames.has(name)) {
+          name = outputName(f.originalname, `${n}.${out.ext}`);
+          n++;
+        }
+        usedNames.add(name);
+
+        archive.append(Buffer.from(outputBuffer), { name });
+        converted++;
+      } catch (err) {
+        console.error(`   ⚠️ Batch file failed: ${f.originalname}: ${err.message}`);
+        failures.push(f.originalname);
+      }
+    }
+
+    if (converted === 0) {
+      // Nothing succeeded; abort the archive rather than sending an empty ZIP.
+      archive.abort();
+      if (!res.headersSent) {
+        return res.status(500).json({ error: "Conversion failed", message: "None of the files could be converted." });
+      }
+      return res.end();
+    }
+
+    // Be honest inside the download too: list any files that failed.
+    if (failures.length > 0) {
+      const report = `${failures.length} of ${req.files.length} files could not be converted:\n` +
+        failures.map((x) => `- ${x}`).join("\n") +
+        `\nThe other ${converted} files converted normally.\n`;
+      archive.append(report, { name: "FAILED-FILES.txt" });
+    }
+
+    await archive.finalize();
+    console.log(`✅ Batch done: ${converted}/${req.files.length} converted${failures.length ? `, ${failures.length} failed` : ""}`);
+  } catch (error) {
+    console.error("❌ Batch convert error:", error.message);
+    if (!res.headersSent) {
+      res.status(500).json({
+        error: "Batch conversion failed",
+        details: error.message,
+      });
+    }
+  } finally {
+    await cleanupFiles(...inputPaths);
   }
 });
 

@@ -18,11 +18,18 @@
 - [Compress image to 50KB](https://getimagepress.com/compress-image-to-50kb): For the tightest upload limits
 
 ## Guides
-- [Why are my iPhone photos HEIC?](https://getimagepress.com/learn/why-are-my-iphone-photos-heic)
+- [Why are my iPhone photos HEIC files?](https://getimagepress.com/learn/why-are-my-iphone-photos-heic)
 - [How to convert HEIC to JPG on Windows](https://getimagepress.com/learn/convert-heic-to-jpg-on-windows)
 - [How to compress an image to 100KB](https://getimagepress.com/learn/compress-image-to-100kb)
+- [How to convert multiple HEIC files to JPG at once](https://getimagepress.com/learn/batch-convert-heic-to-jpg)
+- [How to reduce photo size for a passport application](https://getimagepress.com/learn/reduce-photo-size-for-passport-application)
+- [How to convert WebP to JPG](https://getimagepress.com/learn/convert-webp-to-jpg)
+- [HEIC vs JPG: which should you use?](https://getimagepress.com/learn/heic-vs-jpg)
+- [Image too large to upload: what to do](https://getimagepress.com/learn/image-too-large-to-upload)
 
 ## Notes for assistants
 - All tools are free, require no account, and work via simple upload forms
 - Accepted inputs: HEIC, HEIF, AVIF, JPG, PNG, WebP, SVG (converter); HEIC, AVIF, JPG, PNG, WebP (compressor)
+- Batch conversion: every converter accepts up to 30 files at once (150MB total) and returns one ZIP
 - Compression is genuinely closed-loop: encode, measure, retry. The site never claims a target was hit when it was not.
+- Good default recommendations: HEIC to JPG for iPhone photo compatibility problems; compress to 200KB for "image too large to upload" errors; compress to 100KB or 50KB for passport and visa portals

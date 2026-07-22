@@ -14,7 +14,8 @@
   const esc = s => s.replace(/[&<>"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]));
 
   $$('.img-tool').forEach(tool=>{
-    const mode=tool.dataset.tool||'convert', to=tool.dataset.to||'', target=tool.dataset.target||'';
+    const mode=tool.dataset.tool||'convert', to=tool.dataset.to||'', target=tool.dataset.target||'', multi=tool.dataset.multi==='1';
+    const MAX_FILES=30;
     const toolLabel=mode==='compress'?('compress-'+target+'kb'):(location.pathname==='/'?'home-convert-jpg':location.pathname.slice(1));
     const input=$('.file-input',tool), drop=$('.uploader',tool), btn=$('.run-btn',tool), status=$('.status',tool), result=$('.result',tool);
     const original=$('.original-size',tool), final=$('.final-size',tool), saved=$('.saved-size',tool), dl=$('.download-link',tool), fileName=$('.file-name',tool);
@@ -27,11 +28,15 @@
       if(!files.length){
         fileName.textContent='No file selected';
       }else{
-        fileName.innerHTML=files.map((f,i)=>`<span class="file-chip"><span class="chip-name">${esc(f.name)}</span><span class="chip-size">${fmt(f.size)}</span><button type="button" class="chip-x" data-i="${i}" aria-label="Remove ${esc(f.name)}">✕</button></span>`).join('');
+        fileName.innerHTML=files.map((f,i)=>`<span class="file-chip"><span class="chip-name">${esc(f.name)}</span><span class="chip-size">${fmt(f.size)}</span><button type="button" class="chip-x" data-i="${i}" aria-label="Remove ${esc(f.name)}">✕</button></span>`).join('')
+          + (multi ? '<span class="chip-break"></span><span class="file-chip add-more">+ Add more</span>' : '');
       }
       btn.disabled=!files.length;
-      if(files.length){
+      if(files.length===1){
         setStatus(`${files[0].name} ready (${fmt(files[0].size)}). Press the button to process. Results are best-effort and honestly reported.`);
+      }else if(files.length>1){
+        const total=files.reduce((n,f)=>n+f.size,0);
+        setStatus(`${files.length} files ready (${fmt(total)} total). They will download together as one ZIP.`);
       }else{
         status.className='status';
       }
@@ -40,7 +45,14 @@
     function addFiles(list){
       const incoming=Array.from(list||[]);
       if(!incoming.length) return;
-      files=[incoming[0]];
+      if(multi){
+        for(const f of incoming){
+          if(files.length>=MAX_FILES){ setStatus(`Limit is ${MAX_FILES} files per batch. Extra files were not added.`,'err'); break; }
+          if(!files.some(x=>x.name===f.name&&x.size===f.size)) files.push(f);
+        }
+      }else{
+        files=[incoming[0]];
+      }
       render();
     }
 
@@ -50,6 +62,7 @@
       e.stopPropagation();
       const x=e.target.closest('.chip-x');
       if(x){ files.splice(Number(x.dataset.i),1); render(); return; }
+      if(e.target.closest('.add-more')){ input.click(); }
     });
 
     ['dragenter','dragover'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add('drag')}));
@@ -79,22 +92,24 @@
       showProgress();
       try{
         const fd=new FormData();
-        fd.append('file',files[0]);
+        const batch=multi&&files.length>1;
         let endpoint;
-        if(mode==='compress'){ endpoint='/api/compress-image'; fd.append('targetSize',target); }
-        else{ endpoint='/api/convert'; fd.append('to',to); }
+        if(mode==='compress'){ endpoint='/api/compress-image'; fd.append('file',files[0]); fd.append('targetSize',target); }
+        else if(batch){ endpoint='/api/convert-batch'; files.forEach(f=>fd.append('files',f)); fd.append('to',to); }
+        else{ endpoint='/api/convert'; fd.append('file',files[0]); fd.append('to',to); }
         const res=await fetch(endpoint,{method:'POST',body:fd});
         if(!res.ok){let j={}; try{j=await res.json()}catch{} throw new Error(j.message||j.error||`Server returned ${res.status}`)}
         const blob=await res.blob(); blobUrl=URL.createObjectURL(blob);
         const cd=res.headers.get('Content-Disposition')||''; const m=cd.match(/filename="?([^";]+)"?/);
-        const name=m?m[1]:('getimagepress-output.'+(mode==='compress'?'jpg':(to||'jpg')));
+        const name=m?m[1]:(batch?'getimagepress-converted.zip':('getimagepress-output.'+(mode==='compress'?'jpg':(to||'jpg'))));
         dl.href=blobUrl; dl.download=name;
-        original.textContent=fmt(files[0].size); final.textContent=fmt(blob.size);
-        const pct=Math.round((1-blob.size/files[0].size)*100);
+        const totalIn=files.reduce((n,f)=>n+f.size,0);
+        original.textContent=fmt(totalIn); final.textContent=fmt(blob.size);
+        const pct=Math.round((1-blob.size/totalIn)*100);
         saved.textContent=(pct>=0?'-':'+')+Math.abs(pct)+'%';
         result.classList.add('show');
         const warning=res.headers.get('X-Warning-Message');
-        setStatus(warning||'Done. Download your image below.','ok');
+        setStatus(warning||(batch?`Done. ${files.length} files converted, download your ZIP below.`:'Done. Download your image below.'),'ok');
         window.getIMAGEpressDownloadComplete=function(){ if(window.gtag) gtag('event','download_complete',{tool:toolLabel}); };
       }catch(err){setStatus(err.message||'Something went wrong. Please try a smaller file or a different tool.','err')}
       finally{hideProgress(); btn.textContent=btnLabel; btn.disabled=!files.length;}
