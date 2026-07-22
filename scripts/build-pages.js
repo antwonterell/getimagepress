@@ -10,7 +10,7 @@ const learnDir = path.join(pub, "learn");
 fs.mkdirSync(learnDir, { recursive: true });
 
 const SITE = "https://getimagepress.com";
-const V = "20260721a"; // cache-bust version: bump on every asset change
+const V = "20260722a"; // cache-bust version: bump on every asset change
 const TODAY = "2026-07-21";
 
 // ============================================

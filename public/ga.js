@@ -3,7 +3,7 @@
 // getimagepress.com property (looks like "G-XXXXXXXXXX").
 // Until then this file does nothing, so it is safe to ship.
 (function () {
-  var GA_MEASUREMENT_ID = "";
+  var GA_MEASUREMENT_ID = "G-JDH59V3NBN";
   if (!GA_MEASUREMENT_ID) return;
   var s = document.createElement("script");
   s.async = true;
