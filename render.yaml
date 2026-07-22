@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: getimagepress
+    runtime: docker
+    plan: starter  # $7/month - no sleeping, faster, more reliable
+    branch: main
+    autoDeploy: true
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
