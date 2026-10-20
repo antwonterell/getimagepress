@@ -296,18 +296,18 @@ pages.push(toolPage({
 pages.push(toolPage({
   slug: "png-to-jpg",
   title: "PNG to JPG Converter Free | getIMAGEpress",
-  desc: "Convert PNG images to JPG online free. Much smaller files for photos and screenshots. No signup, files auto-delete within 30 minutes.",
+  desc: "Convert PNG images to JPG for compatible sharing and uploads. File size may increase or decrease. No signup, files auto-delete within 30 minutes.",
   eyebrow: "Format conversion",
   h1: "Convert PNG to JPG",
-  lead: "Shrink bulky PNG files into JPGs for sharing, email, and upload forms. Transparent areas become white.",
+  lead: "Convert PNG files to JPG for apps and forms that require JPG. This changes the format; it does not guarantee a smaller file. Transparent areas become white. Need a size limit? Try our <a href='/compress-image-to-200kb'>200KB</a> or <a href='/compress-image-to-100kb'>100KB</a> compression tools; targets are best-effort.",
   mode: "convert", to: "jpg",
   accept: ".png,image/png",
   btnLabel: "Convert to JPG",
   tips: commonConvertTips,
   faqs: [
     ["What happens to transparency?", "JPG does not support transparency, so transparent areas are flattened onto a white background. If you need transparency kept, use PNG to WebP instead."],
-    ["How much smaller will the JPG be?", "Photos saved as PNG often shrink 80 to 90 percent. Screenshots with lots of flat color shrink less but still meaningfully. We encode at quality 90."],
-    ["Will text in screenshots stay readable?", "At quality 90, yes. JPG can slightly soften sharp edges of text. If a screenshot must stay pixel-perfect, keep it PNG or use PNG to WebP."],
+    ["Will the JPG be smaller?", "The result depends on image content. Photos may become smaller, while screenshots and flat graphics can become larger. We encode at quality 90 and show actual before and after sizes. For a file-size limit, try Compress to 200KB or 100KB."],
+    ["Will text in screenshots stay readable?", "JPG compression can soften text and sharp edges. Inspect the output at full size. Keep the original PNG if exact pixels or transparency matter."],
   ],
 }));
 
