@@ -116,7 +116,7 @@ function toolPage(def) {
     html += `<section class="section"><div class="wrap grid cards-3">` + tips.map(([t, b]) => `<article class="card"><h3>${t}</h3><p>${b}</p></article>`).join("") + `</div></section>`;
   }
   html += faqHtml;
-  html += `</main>${footer}<script src="/app.js?v=${V}" defer></script></body></html>`;
+  html += `</main>${footer}<script src="/app.js?v=20261020-upload" defer></script></body></html>`;
   const file = slug === "index" ? "index.html" : `${slug}.html`;
   fs.writeFileSync(path.join(pub, file), html);
   return pagePath;
@@ -349,7 +349,7 @@ pages.push(compressPage(50));
 function infoPage(slug, title, desc, h1, bodyHtml) {
   const pagePath = `/${slug}`;
   let html = head(title, desc, pagePath) + header;
-  html += `<main><section class="section"><div class="wrap" style="max-width:820px"><h1 class="h1" style="font-size:clamp(32px,5vw,52px)">${h1}</h1>${bodyHtml}</div></section></main>${footer}<script src="/app.js?v=${V}" defer></script></body></html>`;
+  html += `<main><section class="section"><div class="wrap" style="max-width:820px"><h1 class="h1" style="font-size:clamp(32px,5vw,52px)">${h1}</h1>${bodyHtml}</div></section></main>${footer}<script src="/app.js?v=20261020-upload" defer></script></body></html>`;
   fs.writeFileSync(path.join(pub, `${slug}.html`), html);
   pages.push(pagePath);
 }
@@ -380,7 +380,7 @@ infoPage("terms", "Terms of Service | getIMAGEpress", "The terms for using getIM
 // 404
 {
   let html = head("Page not found | getIMAGEpress", "That page does not exist, but the tools do.", "/404") + header;
-  html += `<main><section class="hero"><div class="wrap"><span class="eyebrow">404</span><h1 class="h1">That page slipped out of frame</h1><p class="lead">The page you are looking for does not exist. These tools definitely do.</p><div class="hero-actions"><a class="btn primary" href="/heic-to-jpg">HEIC to JPG</a><a class="btn secondary" href="/compress-image-to-100kb">Compress to 100KB</a><a class="btn ghost" href="/">All tools</a></div></div></section></main>${footer}<script src="/app.js?v=${V}" defer></script></body></html>`;
+  html += `<main><section class="hero"><div class="wrap"><span class="eyebrow">404</span><h1 class="h1">That page slipped out of frame</h1><p class="lead">The page you are looking for does not exist. These tools definitely do.</p><div class="hero-actions"><a class="btn primary" href="/heic-to-jpg">HEIC to JPG</a><a class="btn secondary" href="/compress-image-to-100kb">Compress to 100KB</a><a class="btn ghost" href="/">All tools</a></div></div></section></main>${footer}<script src="/app.js?v=20261020-upload" defer></script></body></html>`;
   fs.writeFileSync(path.join(pub, "404.html"), html);
 }
 
@@ -404,7 +404,7 @@ function article(slug, title, desc, h1, sections, faqs, opts) {
   };
   const { html: faqHtml, schema: faqSchema } = faqSection(faqs);
   let html = head(title, desc, pagePath, articleSchema) + (faqSchema ? `<script type="application/ld+json">${JSON.stringify(faqSchema)}</script>` : "") + header;
-  html += `<main><section class="article"><div class="wrap article-layout"><aside class="toc"><b class="small">On this page</b>${toc}</aside><article class="prose"><h1>${h1}</h1>${openerHtml}${ctaHtml}${body}</article></div></section>${faqHtml}</main>${footer}<script src="/app.js?v=${V}" defer></script></body></html>`;
+  html += `<main><section class="article"><div class="wrap article-layout"><aside class="toc"><b class="small">On this page</b>${toc}</aside><article class="prose"><h1>${h1}</h1>${openerHtml}${ctaHtml}${body}</article></div></section>${faqHtml}</main>${footer}<script src="/app.js?v=20261020-upload" defer></script></body></html>`;
   fs.writeFileSync(path.join(learnDir, `${slug}.html`), html);
   articles.push({ slug, title: h1, desc });
   pages.push(pagePath);
@@ -644,7 +644,7 @@ article("image-too-large-to-upload",
   const { html: faqHtml, schema: faqSchema } = faqSection(learnFaqs);
   const learnCta = `<div class="hero-actions" style="margin-top:22px"><a class="btn primary" href="/heic-to-jpg">HEIC to JPG</a><a class="btn secondary" href="/compress-image-to-100kb">Compress to 100KB</a><a class="btn secondary" href="/compress-image-to-50kb">Compress to 50KB</a></div>`;
   let html = head("Learn: Image Formats and Compression Guides | getIMAGEpress", "Plain-English guides to HEIC, WebP, image compression, and beating strict upload limits.", "/learn", faqSchema) + header;
-  html += `<main><section class="hero"><div class="wrap"><span class="eyebrow">Guides</span><h1 class="h1">Learn</h1><p class="lead">Plain-English guides to image formats, iPhone photos, and hitting strict upload limits.</p>${learnCta}</div></section><section class="section"><div class="wrap grid" style="grid-template-columns:repeat(auto-fill,minmax(300px,1fr))">${cards}</div></section>${faqHtml}</main>${footer}<script src="/app.js?v=${V}" defer></script></body></html>`;
+  html += `<main><section class="hero"><div class="wrap"><span class="eyebrow">Guides</span><h1 class="h1">Learn</h1><p class="lead">Plain-English guides to image formats, iPhone photos, and hitting strict upload limits.</p>${learnCta}</div></section><section class="section"><div class="wrap grid" style="grid-template-columns:repeat(auto-fill,minmax(300px,1fr))">${cards}</div></section>${faqHtml}</main>${footer}<script src="/app.js?v=20261020-upload" defer></script></body></html>`;
   fs.writeFileSync(path.join(learnDir, "index.html"), html);
   pages.push("/learn");
 }

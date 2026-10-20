@@ -19,12 +19,15 @@
     const toolLabel=mode==='compress'?('compress-'+target+'kb'):(location.pathname==='/'?'home-convert-jpg':location.pathname.slice(1));
     const input=$('.file-input',tool), drop=$('.uploader',tool), btn=$('.run-btn',tool), status=$('.status',tool), result=$('.result',tool);
     const original=$('.original-size',tool), final=$('.final-size',tool), saved=$('.saved-size',tool), dl=$('.download-link',tool), fileName=$('.file-name',tool);
-    let files=[], blobUrl=null;
+    let files=[], blobUrl=null, processing=false;
     fileName.classList.add('file-list');
 
     function setStatus(msg,type=''){status.textContent=msg; status.className='status show '+type;}
 
     function render(){
+      result.classList.remove('show');
+      if(blobUrl){ URL.revokeObjectURL(blobUrl); blobUrl=null; }
+      dl.href='';
       if(!files.length){
         fileName.textContent='No file selected';
       }else{
@@ -43,23 +46,28 @@
     }
 
     function addFiles(list){
+      if(processing) return;
       const incoming=Array.from(list||[]);
       if(!incoming.length) return;
+      let overLimit=false;
       if(multi){
         for(const f of incoming){
-          if(files.length>=MAX_FILES){ setStatus(`Limit is ${MAX_FILES} files per batch. Extra files were not added.`,'err'); break; }
-          if(!files.some(x=>x.name===f.name&&x.size===f.size)) files.push(f);
+          if(files.some(x=>x.name===f.name&&x.size===f.size)) continue;
+          if(files.length>=MAX_FILES){ overLimit=true; break; }
+          files.push(f);
         }
       }else{
         files=[incoming[0]];
       }
       render();
+      if(overLimit) setStatus(`Limit is ${MAX_FILES} files per batch. Extra files were not added.`,'err');
     }
 
     fileName.addEventListener('click',e=>{
       // The chip list sits inside the clickable uploader; without this,
       // removing a file also pops the file picker.
       e.stopPropagation();
+      if(processing) return;
       const x=e.target.closest('.chip-x');
       if(x){ files.splice(Number(x.dataset.i),1); render(); return; }
       if(e.target.closest('.add-more')){ input.click(); }
@@ -85,7 +93,8 @@
 
     const btnLabel=btn.textContent;
     btn.addEventListener('click',async()=>{
-      if(!files.length) return;
+      if(processing || !files.length) return;
+      processing=true;
       if(blobUrl) URL.revokeObjectURL(blobUrl);
       result.classList.remove('show'); btn.disabled=true; btn.textContent='Working…';
       setStatus('Working on it now. Large photos can take a few seconds - no need to click again.');
@@ -112,7 +121,7 @@
         setStatus(warning||(batch?`Done. ${files.length} files converted, download your ZIP below.`:'Done. Download your image below.'),'ok');
         window.getIMAGEpressDownloadComplete=function(){ if(window.gtag) gtag('event','download_complete',{tool:toolLabel}); };
       }catch(err){setStatus(err.message||'Something went wrong. Please try a smaller file or a different tool.','err')}
-      finally{hideProgress(); btn.textContent=btnLabel; btn.disabled=!files.length;}
+      finally{processing=false; hideProgress(); btn.textContent=btnLabel; btn.disabled=!files.length;}
     });
 
     render();
