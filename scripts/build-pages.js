@@ -116,7 +116,7 @@ function toolPage(def) {
     html += `<section class="section"><div class="wrap grid cards-3">` + tips.map(([t, b]) => `<article class="card"><h3>${t}</h3><p>${b}</p></article>`).join("") + `</div></section>`;
   }
   html += faqHtml;
-  html += `</main>${footer}<script src="/app.js?v=20261020-upload" defer></script></body></html>`;
+  html += `</main>${footer}<script src="/app.js?v=20261023-events" defer></script></body></html>`;
   const file = slug === "index" ? "index.html" : `${slug}.html`;
   fs.writeFileSync(path.join(pub, file), html);
   return pagePath;
@@ -141,13 +141,13 @@ pages.push(toolPage({
   desc: "Convert HEIC, WebP, SVG, JPG, and PNG free. Compress images to 200KB, 100KB, or 50KB for upload forms. No signup, no watermarks, files auto-delete.",
   eyebrow: "Free, honest image tools",
   h1: "Convert and compress images, free",
-  lead: "getIMAGEpress converts HEIC, WebP, SVG, JPG, and PNG and compresses photos to exact upload targets such as 100KB or 200KB. Every tool is free, needs no signup, and reports real before and after sizes. Uploaded files auto-delete within 30 minutes.",
+  lead: "getIMAGEpress converts HEIC, WebP, SVG, JPG, and PNG and compresses photos toward best-effort upload targets such as 100KB or 200KB. Every tool is free, needs no signup, and reports real before and after sizes. Uploaded files auto-delete within 30 minutes.",
   mode: "convert", to: "jpg",
   accept: ACCEPT_HEIC + ",.webp,.png,.jpg,.jpeg,.svg,.avif",
   btnLabel: "Convert to JPG",
   note: "Drop any HEIC, WebP, PNG, JPG, SVG, or AVIF file here to get a JPG back. Files auto-delete within 30 minutes.",
   tips: [
-    ["Built for real upload forms", "Job portals, government forms, passport applications, and school systems reject oversized images every day. The compress tools target the exact sizes those forms ask for."],
+    ["Built for real upload forms", "Job portals, government forms, passport applications, and school systems reject oversized images every day. Choose the target required by the form, then verify the downloaded size and image quality. A target is not a guaranteed result."],
     ["iPhone photos welcome", "iPhones shoot HEIC by default and half the internet cannot open it. HEIC to JPG is the fastest fix, and it runs on every file you drop here."],
     ["Nothing to install", "Everything runs in your browser plus our server. No app, no account, no watermark, and your files auto-delete within 30 minutes."],
   ],
@@ -349,7 +349,7 @@ pages.push(compressPage(50));
 function infoPage(slug, title, desc, h1, bodyHtml) {
   const pagePath = `/${slug}`;
   let html = head(title, desc, pagePath) + header;
-  html += `<main><section class="section"><div class="wrap" style="max-width:820px"><h1 class="h1" style="font-size:clamp(32px,5vw,52px)">${h1}</h1>${bodyHtml}</div></section></main>${footer}<script src="/app.js?v=20261020-upload" defer></script></body></html>`;
+  html += `<main><section class="section"><div class="wrap" style="max-width:820px"><h1 class="h1" style="font-size:clamp(32px,5vw,52px)">${h1}</h1>${bodyHtml}</div></section></main>${footer}<script src="/app.js?v=20261023-events" defer></script></body></html>`;
   fs.writeFileSync(path.join(pub, `${slug}.html`), html);
   pages.push(pagePath);
 }
@@ -367,8 +367,8 @@ infoPage("contact", "Contact | getIMAGEpress", "How to reach getIMAGEpress.", "C
 infoPage("privacy", "Privacy Policy | getIMAGEpress", "What getIMAGEpress collects, what it does not, and how long files live.", "Privacy Policy",
   `<p class="small">Last updated: July 21, 2026</p>
   <div class="card" style="margin-top:18px"><h3>Your files</h3><p>Uploaded images are stored temporarily on our server only for processing. A cleanup job runs every 5 minutes and deletes any file older than 25 minutes, so every upload is gone within 30 minutes. We do not view, share, sell, or back up your files.</p></div>
-  <div class="card" style="margin-top:18px"><h3>What we collect</h3><p>Standard server logs (IP address, request path, timestamp) for abuse prevention and debugging, retained briefly. We use Google Analytics 4 with IP anonymization to understand which tools people use. No accounts exist, so we hold no personal profiles.</p></div>
-  <div class="card" style="margin-top:18px"><h3>Cookies</h3><p>We set no cookies ourselves. Google Analytics may set its own cookies; see Google's privacy documentation for details.</p></div>
+  <div class="card" style="margin-top:18px"><h3>What we collect</h3><p>Standard server logs (IP address, request path, timestamp) for abuse prevention and debugging, retained briefly. We use Google Analytics 4 to understand which tools people use. Google uses IP addresses during collection to derive location; GA4 does not log or store individual IP addresses. No accounts exist, so we hold no personal profiles.</p></div>
+  <div class="card" style="margin-top:18px"><h3>Cookies</h3><p>We set no cookies ourselves. Google Analytics may set its own cookies; see <a href="https://support.google.com/analytics/answer/6004245?hl=en">Google's Analytics privacy documentation</a> for details.</p></div>
   <div class="card" style="margin-top:18px"><h3>Contact</h3><p>Privacy questions: <a href="mailto:antwonterell@gmail.com">antwonterell@gmail.com</a></p></div>`);
 
 infoPage("terms", "Terms of Service | getIMAGEpress", "The terms for using getIMAGEpress.", "Terms of Service",
@@ -380,7 +380,7 @@ infoPage("terms", "Terms of Service | getIMAGEpress", "The terms for using getIM
 // 404
 {
   let html = head("Page not found | getIMAGEpress", "That page does not exist, but the tools do.", "/404") + header;
-  html += `<main><section class="hero"><div class="wrap"><span class="eyebrow">404</span><h1 class="h1">That page slipped out of frame</h1><p class="lead">The page you are looking for does not exist. These tools definitely do.</p><div class="hero-actions"><a class="btn primary" href="/heic-to-jpg">HEIC to JPG</a><a class="btn secondary" href="/compress-image-to-100kb">Compress to 100KB</a><a class="btn ghost" href="/">All tools</a></div></div></section></main>${footer}<script src="/app.js?v=20261020-upload" defer></script></body></html>`;
+  html += `<main><section class="hero"><div class="wrap"><span class="eyebrow">404</span><h1 class="h1">That page slipped out of frame</h1><p class="lead">The page you are looking for does not exist. These tools definitely do.</p><div class="hero-actions"><a class="btn primary" href="/heic-to-jpg">HEIC to JPG</a><a class="btn secondary" href="/compress-image-to-100kb">Compress to 100KB</a><a class="btn ghost" href="/">All tools</a></div></div></section></main>${footer}<script src="/app.js?v=20261023-events" defer></script></body></html>`;
   fs.writeFileSync(path.join(pub, "404.html"), html);
 }
 
@@ -404,7 +404,7 @@ function article(slug, title, desc, h1, sections, faqs, opts) {
   };
   const { html: faqHtml, schema: faqSchema } = faqSection(faqs);
   let html = head(title, desc, pagePath, articleSchema) + (faqSchema ? `<script type="application/ld+json">${JSON.stringify(faqSchema)}</script>` : "") + header;
-  html += `<main><section class="article"><div class="wrap article-layout"><aside class="toc"><b class="small">On this page</b>${toc}</aside><article class="prose"><h1>${h1}</h1>${openerHtml}${ctaHtml}${body}</article></div></section>${faqHtml}</main>${footer}<script src="/app.js?v=20261020-upload" defer></script></body></html>`;
+  html += `<main><section class="article"><div class="wrap article-layout"><aside class="toc"><b class="small">On this page</b>${toc}</aside><article class="prose"><h1>${h1}</h1>${openerHtml}${ctaHtml}${body}</article></div></section>${faqHtml}</main>${footer}<script src="/app.js?v=20261023-events" defer></script></body></html>`;
   fs.writeFileSync(path.join(learnDir, `${slug}.html`), html);
   articles.push({ slug, title: h1, desc });
   pages.push(pagePath);
@@ -644,7 +644,7 @@ article("image-too-large-to-upload",
   const { html: faqHtml, schema: faqSchema } = faqSection(learnFaqs);
   const learnCta = `<div class="hero-actions" style="margin-top:22px"><a class="btn primary" href="/heic-to-jpg">HEIC to JPG</a><a class="btn secondary" href="/compress-image-to-100kb">Compress to 100KB</a><a class="btn secondary" href="/compress-image-to-50kb">Compress to 50KB</a></div>`;
   let html = head("Learn: Image Formats and Compression Guides | getIMAGEpress", "Plain-English guides to HEIC, WebP, image compression, and beating strict upload limits.", "/learn", faqSchema) + header;
-  html += `<main><section class="hero"><div class="wrap"><span class="eyebrow">Guides</span><h1 class="h1">Learn</h1><p class="lead">Plain-English guides to image formats, iPhone photos, and hitting strict upload limits.</p>${learnCta}</div></section><section class="section"><div class="wrap grid" style="grid-template-columns:repeat(auto-fill,minmax(300px,1fr))">${cards}</div></section>${faqHtml}</main>${footer}<script src="/app.js?v=20261020-upload" defer></script></body></html>`;
+  html += `<main><section class="hero"><div class="wrap"><span class="eyebrow">Guides</span><h1 class="h1">Learn</h1><p class="lead">Plain-English guides to image formats, iPhone photos, and hitting strict upload limits.</p>${learnCta}</div></section><section class="section"><div class="wrap grid" style="grid-template-columns:repeat(auto-fill,minmax(300px,1fr))">${cards}</div></section>${faqHtml}</main>${footer}<script src="/app.js?v=20261023-events" defer></script></body></html>`;
   fs.writeFileSync(path.join(learnDir, "index.html"), html);
   pages.push("/learn");
 }

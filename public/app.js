@@ -16,7 +16,10 @@
   $$('.img-tool').forEach(tool=>{
     const mode=tool.dataset.tool||'convert', to=tool.dataset.to||'', target=tool.dataset.target||'', multi=tool.dataset.multi==='1';
     const MAX_FILES=30;
-    const toolLabel=mode==='compress'?('compress-'+target+'kb'):(location.pathname==='/'?'home-convert-jpg':location.pathname.slice(1));
+    const analyticsTool=mode==='compress'&&['50','100','200'].includes(target)?'compress-'+target+'kb':mode==='convert'&&['jpg','png','webp'].includes(to)?'convert-'+to:'other';
+    function track(event){
+      try{if(typeof window.gtag==='function')window.gtag('event',event,{tool:analyticsTool});}catch(_){}
+    }
     const input=$('.file-input',tool), drop=$('.uploader',tool), btn=$('.run-btn',tool), status=$('.status',tool), result=$('.result',tool);
     const original=$('.original-size',tool), final=$('.final-size',tool), saved=$('.saved-size',tool), dl=$('.download-link',tool), fileName=$('.file-name',tool);
     let files=[], blobUrl=null, processing=false;
@@ -49,6 +52,7 @@
       if(processing) return;
       const incoming=Array.from(list||[]);
       if(!incoming.length) return;
+      const previousCount=files.length;
       let overLimit=false;
       if(multi){
         for(const f of incoming){
@@ -60,6 +64,7 @@
         files=[incoming[0]];
       }
       render();
+      if(!multi||files.length>previousCount) track('file_selected');
       if(overLimit) setStatus(`Limit is ${MAX_FILES} files per batch. Extra files were not added.`,'err');
     }
 
@@ -95,7 +100,9 @@
     btn.addEventListener('click',async()=>{
       if(processing || !files.length) return;
       processing=true;
+      track('processing_started');
       if(blobUrl) URL.revokeObjectURL(blobUrl);
+      blobUrl=null; dl.href='';
       result.classList.remove('show'); btn.disabled=true; btn.textContent='Working…';
       setStatus('Working on it now. Large photos can take a few seconds - no need to click again.');
       showProgress();
@@ -119,8 +126,10 @@
         result.classList.add('show');
         const warning=res.headers.get('X-Warning-Message');
         setStatus(warning||(batch?`Done. ${files.length} files converted, download your ZIP below.`:'Done. Download your image below.'),'ok');
-        window.getIMAGEpressDownloadComplete=function(){ if(window.gtag) gtag('event','download_complete',{tool:toolLabel}); };
-      }catch(err){setStatus(err.message||'Something went wrong. Please try a smaller file or a different tool.','err')}
+        track('processing_success');
+        // Preserve the existing inline callback, but report a click, not an OS save.
+        window.getIMAGEpressDownloadComplete=function(){if(!processing&&blobUrl)track('download_click');};
+      }catch(err){track('processing_error'); setStatus(err.message||'Something went wrong. Please try a smaller file or a different tool.','err')}
       finally{processing=false; hideProgress(); btn.textContent=btnLabel; btn.disabled=!files.length;}
     });
 
