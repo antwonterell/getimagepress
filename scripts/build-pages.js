@@ -129,7 +129,7 @@ const ACCEPT_HEIC = ".heic,.heif,image/heic,image/heif";
 const commonConvertTips = [
   ["Privacy first", "Your image uploads over an encrypted connection, gets converted on our server, and auto-deletes within 30 minutes. We never add watermarks and never ask you to sign up."],
   ["Real sizes, no games", "Every result shows the actual before and after file size. Converting between formats can make files bigger or smaller depending on the content, and we show you the truth either way."],
-  ["25MB limit", "Uploads are capped at 25MB per image. That covers photos from every current phone camera. If your file is larger, resize it first and try again."],
+  ["25MB limit", "Uploads are capped at 25MB per image. Some camera files exceed that limit. If your file is larger, resize it first and try again."],
 ];
 
 const pages = [];
@@ -172,7 +172,7 @@ pages.push(toolPage({
   tips: commonConvertTips,
   faqs: [
     ["What is a HEIC file?", "HEIC is the High Efficiency Image Container format that iPhones use by default. It stores photos at roughly half the size of JPG with the same quality, but many websites, Windows apps, and upload forms cannot open it."],
-    ["Will converting HEIC to JPG lose quality?", "A small amount, because JPG re-encodes the photo. We use quality 90, which looks identical to the original in normal viewing. Expect the JPG to be larger than the HEIC, since JPG compression is less efficient."],
+    ["Will converting HEIC to JPG lose quality?", "JPG re-encoding can lose detail. We use quality 90, but visible differences and output size depend on the source image. Inspect fine detail and color before using the converted copy."],
     ["How do I stop my iPhone from shooting HEIC?", "Open Settings, tap Camera, tap Formats, and choose Most Compatible. New photos will save as JPG. Existing HEIC photos still need converting, which is what this tool is for."],
     ["Is this private?", "Yes. Files upload over TLS, get converted on our server, and auto-delete within 30 minutes. No signup, no watermarks, and we never look at your photos."],
     ["Does this work on iPhone Safari?", "Yes. Open this page in Safari, tap the uploader, and pick photos straight from your library. You can select a whole batch of vacation photos and get one ZIP of JPGs back."],
@@ -331,7 +331,7 @@ function compressPage(target, extra) {
     ],
     faqs: [
       [`Can every image reach ${target}KB?`, `Most photos can. Extremely detailed images may bottom out slightly above very small targets at usable dimensions. When that happens we return the smallest usable result and say so plainly, instead of pretending it worked.`],
-      ["What quality will I get?", `The best quality that fits the byte budget. We search for the highest JPG quality that lands under ${target}KB, downscaling dimensions only when necessary (output is capped at 2400 pixels wide, plenty for any upload form).`],
+      ["What quality will I get?", `The best quality that fits the byte budget. We search for the highest JPG quality that lands under ${target}KB, downscaling dimensions only when necessary (output is capped at 2400 pixels wide; check the destination's required dimensions and format).`],
       ["Which input formats work?", "JPG, PNG, WebP, and iPhone HEIC photos. Whatever you upload, the result comes back as a JPG under the target when reachable."],
       ["Does compressing change my original file?", "Never. Your original stays untouched on your device. The tool sends back a new, smaller copy as a download, so a bad result costs you nothing."],
       ["Why is my compressed image exactly a JPG?", `Because upload forms with KB limits expect JPG. PNG rarely fits tight byte budgets for photos, so we always deliver JPG at the highest quality that fits ${target}KB.`],
@@ -340,7 +340,7 @@ function compressPage(target, extra) {
   });
 }
 pages.push(compressPage(200));
-pages.push(compressPage(100, [["Is 100KB enough for a passport photo upload?", "Yes for most systems. Passport and visa portals typically ask for 50KB to 300KB. Check your portal's exact requirement, then pick the matching tool: we have 50KB, 100KB, and 200KB targets."]]));
+pages.push(compressPage(100, [["Is 100KB enough for a passport photo upload?", "Requirements vary by issuing authority and application. Check the destination's file-size limit, pixel dimensions, format, and photo rules before choosing a target. Compression does not establish passport-photo eligibility or guarantee acceptance."]]));
 pages.push(compressPage(50));
 
 // ============================================
@@ -514,7 +514,7 @@ article("batch-convert-heic-to-jpg",
       "On iPhone Safari, tap the upload box, choose Photo Library, then tap Select and swipe across the photos you want. iOS hands the originals to the browser and the whole batch uploads together.",
       "On Windows or Mac, select a range in your file manager with Shift-click (or Ctrl-click and Cmd-click for individual files) and drag the selection onto the upload box."],
     ["what-to-expect", "What to expect from the results",
-      "Each JPG comes out at quality 90, visually identical to the original for normal viewing. Expect JPGs to be roughly 1.5 to 2 times larger than the HEIC files, because JPG compression is older and less efficient. That is the honest cost of files that open everywhere.",
+      "Each JPG comes out at quality 90; visible differences depend on the source image, so inspect the result. Expect JPGs to be roughly 1.5 to 2 times larger than the HEIC files, because JPG compression is older and less efficient. That is the honest cost of files that open everywhere.",
       `<p>If the destination also has a file-size limit, run the converted photos through <a href="/compress-image-to-200kb">compress to 200KB</a> afterward, or whatever target the form demands.</p>`],
   ],
   [
