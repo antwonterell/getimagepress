@@ -2,7 +2,7 @@
 # sharp ships prebuilt libvips (includes SVG rasterization); heic-convert is
 # pure WASM. No ghostscript/graphicsmagick/poppler needed on this site.
 
-FROM node:18-alpine
+FROM node:24.22.1-alpine3.24
 
 # Environment variables
 # Heap capped at 320MB: sharp/libvips allocate native memory OUTSIDE the Node
@@ -12,6 +12,8 @@ ENV HOME=/tmp
 ENV TMPDIR=/tmp
 
 # Fonts so SVGs containing text rasterize correctly
+RUN apk add --no-cache --upgrade ca-certificates && update-ca-certificates
+
 RUN apk add --no-cache fontconfig ttf-dejavu && rm -rf /var/cache/apk/*
 
 # Create app directory
