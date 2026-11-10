@@ -320,7 +320,7 @@ function compressPage(target, extra) {
     desc: `Compress JPG, PNG, WebP, or HEIC images to ${target}KB online free. Built for ${usedFor.split(",")[0]} and strict upload limits. Honest best-effort results.`,
     eyebrow: "Hit a real upload limit",
     h1: `Compress image to ${target}KB`,
-    lead: `For ${usedFor}. We compress toward ${target}KB and tell you the truth about the result.`,
+    lead: `For ${usedFor}. This tool treats 1KB as 1,024 bytes, so the ${target}KB target is ${target * 1024} bytes. Some portals use 1,000 bytes per KB; compare the downloaded byte count with the exact destination cap. Results are best-effort.`,
     mode: "compress", target: String(target),
     accept: ".jpg,.jpeg,.png,.webp," + ACCEPT_HEIC,
     btnLabel: `Compress to ${target}KB`,
