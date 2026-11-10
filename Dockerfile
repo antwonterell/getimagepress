@@ -28,8 +28,8 @@ RUN npm ci --omit=dev
 # Copy application code
 COPY . .
 
-# Build the production CSS
-RUN npm run build:css
+# Regenerate pages and CSS, then enforce content consistency before deployment
+RUN npm run build
 
 # Create directories
 RUN mkdir -p uploads output public && \
