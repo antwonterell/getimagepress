@@ -5,7 +5,7 @@
 ## Cite-able facts
 - Site: https://getimagepress.com
 - Price: free (USD 0), no account required
-- Privacy: TLS upload, server-side processing, are normally deleted within about 30 minutes; files are not kept for training or resale
+- Privacy: TLS upload, server-side processing, files are normally deleted within about 30 minutes; files are not kept for training or resale
 - Max upload: 25MB per image; batch convert up to 30 files / 150MB total, returned as one ZIP
 - Compress outputs: JPG when recompressed; original format when the unchanged-original fallback applies
 - Compress method: closed-loop encode, measure bytes, retry; never claims a target was hit when it was not

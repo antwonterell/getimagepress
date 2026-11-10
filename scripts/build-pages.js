@@ -32,7 +32,7 @@ function head(title, desc, pagePath, extraSchema) {
   return `<!doctype html><html lang="en"><head><meta name="google-adsense-account" content="ca-pub-6781139210059469"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${title}</title><meta name="description" content="${desc}"><link rel="canonical" href="${canonical}"><meta property="og:title" content="${title}"><meta property="og:description" content="${desc}"><meta property="og:url" content="${canonical}"><meta property="og:type" content="website"><meta property="og:image" content="${SITE}/og-imagepress.jpg"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="stylesheet" href="/output.css?v=${V}">${ld}<script src="/ga.js?v=${V}" defer></script></head><body>`;
 }
 
-const trustPills = `<div class="trust-row"><span class="pill">🔒 TLS encrypted</span><span class="pill">🕒 Files auto-delete within 30 min</span><span class="pill">🚫 No signup, no watermarks</span><span class="pill">Honest results, real sizes</span></div>`;
+const trustPills = `<div class="trust-row"><span class="pill">🔒 TLS encrypted</span><span class="pill">🕒 Files are normally deleted in about 30 min</span><span class="pill">🚫 No signup, no watermarks</span><span class="pill">Honest results, real sizes</span></div>`;
 
 // ============================================
 // TOOL CARD
@@ -49,7 +49,7 @@ function toolCard({ mode, to, target, accept, btnLabel, note, cardNote }) {
     webp: "Output: WebP at quality 82, the web sweet spot. Select up to 30 files at once; multiple files download as one ZIP. Real before and after sizes shown.",
   };
   const targetNote = mode === "compress"
-    ? `<p class="small">Target: ${target}KB. Best effort: if ${target}KB is not reachable at a usable size, you get the smallest usable result and an honest message.</p>`
+    ? `<p class="small">Target: ${target}KB. Best effort: if ${target}KB is not reachable at a usable size, you get a best-effort result and a warning. Inspect visual quality yourself; the tool does not assess readability.</p>`
     : `<p class="small">${cardNote || convertDefaults[to]}</p>`;
   return `<div class="tool-card img-tool" ${dataAttrs}><div class="uploader"><div class="upload-icon">🖼️</div><h3>Choose or drop your image${multi ? "s" : ""}</h3><p class="small">${note || "Files upload to the getIMAGEpress server for processing, then are normally deleted within about 30 minutes. Do not upload images you are not allowed to process."}</p><p class="file-name small">No file selected</p><input class="file-input" type="file" accept="${accept}"${multi ? " multiple" : ""}></div>${targetNote}<button class="btn primary run-btn" type="button" disabled>${btnLabel}</button><div class="status"></div><div class="result"><div class="stats"><div class="stat"><span class="small">Original</span><strong class="original-size">0 KB</strong></div><div class="stat"><span class="small">Result</span><strong class="final-size">0 KB</strong></div><div class="stat"><span class="small">Change</span><strong class="saved-size">0%</strong></div></div><a class="btn primary download-link" href="#" onclick="window.getIMAGEpressDownloadComplete&&window.getIMAGEpressDownloadComplete()">Download image</a></div></div>`;
 }
@@ -127,7 +127,7 @@ function toolPage(def) {
 // ============================================
 const ACCEPT_HEIC = ".heic,.heif,image/heic,image/heif";
 const commonConvertTips = [
-  ["Privacy first", "Your image uploads over an encrypted connection, gets converted on our server, and auto-deletes within 30 minutes. We never add watermarks and never ask you to sign up."],
+  ["Privacy first", "Your image uploads over an encrypted connection, gets converted on our server, and is normally deleted within about 30 minutes. We never add watermarks and never ask you to sign up."],
   ["Real sizes, no games", "Every result shows the actual before and after file size. Converting between formats can make files bigger or smaller depending on the content, and we show you the truth either way."],
   ["25MB limit", "Uploads are capped at 25MB per image. Some camera files exceed that limit. If your file is larger, resize it first and try again."],
 ];
@@ -424,7 +424,7 @@ article("why-are-my-iphone-photos-heic",
       "This is not your phone being broken and not the receiving computer being broken. It is a format licensing gap: the HEVC codec inside HEIC carries patent licensing costs that much of the software world declined to pay, so support stayed patchy."],
     ["fastest-fix", "The fastest fix: convert to JPG",
       "When a HEIC file will not open somewhere, convert it to JPG. JPG opens on effectively every device and website built since the 1990s.",
-      `<p>Drop your photo into our free <a href="/heic-to-jpg">HEIC to JPG converter</a>. It decodes the HEIC on our server, re-encodes it as a quality-90 JPG, and hands it straight back. No signup, no watermark, and the file auto-deletes within 30 minutes. If you need lossless output for editing, <a href="/heic-to-png">HEIC to PNG</a> does the same job.</p>`,
+      `<p>Drop your photo into our free <a href="/heic-to-jpg">HEIC to JPG converter</a>. It decodes the HEIC on our server, re-encodes it as a quality-90 JPG, and hands it straight back. No signup, no watermark, and the file is normally deleted within about 30 minutes. If you need lossless output for editing, <a href="/heic-to-png">HEIC to PNG</a> does the same job.</p>`,
       "Expect the JPG to be larger than the HEIC, usually 1.5 to 2 times. That is the price of compatibility: JPG's 1992-era compression cannot match HEVC."],
     ["stop-shooting-heic", "How to make your iPhone shoot JPG instead",
       "If you regularly send photos to Windows users or upload to picky forms, you can switch the camera to JPG permanently: open Settings, tap Camera, tap Formats, and choose Most Compatible instead of High Efficiency.",
@@ -482,7 +482,7 @@ article("compress-image-to-100kb",
       "For a typical phone photo, 100KB lands around quality 20 to 40 at 2400 pixels wide, or higher quality at smaller dimensions. That sounds brutal, but upload portals display images small, so the result looks fine where it will actually be seen."],
     ["how-to", "The fast way to do it",
       `<p>Use our <a href="/compress-image-to-100kb">compress image to 100KB</a> tool. It runs a closed loop: encode the image, measure the actual bytes, and retry at adjusted settings until the file fits under 100KB within the configured JPG quality and resizing limits. JPG, PNG, WebP, and iPhone HEIC files all work as input, and the output is a JPG, which is what these portals want.</p>`,
-      "If your image genuinely cannot reach 100KB at a usable size (rare, but it happens with extremely detailed images), the tool says so honestly and gives you the smallest usable result instead of pretending it worked.",
+      "If the configured compression attempts cannot reach 100KB, the tool returns a best-effort result with a warning. Inspect the actual byte count and visual quality; the tool does not assess readability.",
       `<p>Portals with different limits are covered too: <a href="/compress-image-to-200kb">200KB</a> for most job portals and <a href="/compress-image-to-50kb">50KB</a> for the strictest systems.</p>`],
     ["quality-tips", "Keeping the image looking good",
       "Crop before you compress: removing background pixels spends your byte budget on the subject. For documents and forms, good lighting matters more than resolution, since JPG compression amplifies noise from dark photos.",
@@ -509,7 +509,7 @@ article("batch-convert-heic-to-jpg",
       "Most free converters make batch work painful on purpose, gating multiple files behind a paid tier or making you re-upload for every single photo."],
     ["how-to-batch", "Batch convert in one upload",
       `<p>Our <a href="/heic-to-jpg">HEIC to JPG converter</a> takes up to 30 files in one go. Select them all in the file picker (or drag the whole selection into the upload box), press convert once, and download a single ZIP containing every JPG.</p>`,
-      "Batches are capped at 30 files and 150MB total, which comfortably covers a phone's worth of vacation photos in one or two rounds. Files convert one at a time on the server to keep quality consistent, and everything auto-deletes within 30 minutes.",
+      "Batches are capped at 30 files and 150MB total, which comfortably covers a phone's worth of vacation photos in one or two rounds. Files convert one at a time on the server to keep quality consistent, and everything is normally deleted within about 30 minutes.",
       "If any single file fails to convert (a corrupted download, for example), the ZIP includes a plain-text report naming exactly which files failed. You never get silent missing photos."],
     ["from-iphone", "Selecting many photos on iPhone",
       "On iPhone Safari, tap the upload box, choose Photo Library, then tap Select and swipe across the photos you want. iOS hands the originals to the browser and the whole batch uploads together.",
@@ -531,23 +531,23 @@ article("reduce-photo-size-for-passport-application",
   [
     ["why-rejected", "Why passport portals reject your photo",
       "Passport, visa, and government ID portals are strict in two separate ways at once: file size (often 50KB to 300KB) and dimensions (often an exact pixel size like 600 by 600, or a 2 inch square at a stated DPI). A photo can pass one rule and fail the other, which is why so many people get stuck in a rejection loop.",
-      "Meanwhile any photo taken on a modern phone starts at 2MB to 8MB, far over every limit. Some amount of compression is mandatory, not optional."],
+      "Phone-photo sizes vary. Compare your actual file with the requirements for your specific application. Compress only if needed and permitted; some applications impose a minimum file size or prohibit alterations."],
     ["read-the-rules", "Step 1: read the portal's exact rules",
-      "Before touching the photo, find the upload page's stated requirements and write down three things: the maximum file size in KB, the required dimensions in pixels, and the accepted format (almost always JPG or JPEG).",
+      "Before touching the photo, find the upload page's stated requirements and write down three things: the maximum file size in KB, the required dimensions in pixels, and the accepted format (as specified by your application).",
       "Passport and visa processes have different rules. Read the instructions for your exact application, including minimum and maximum file size, accepted formats, dimensions, and restrictions on editing. A smaller file is not automatically an acceptable photo."],
     ["prepare", "Step 2: crop and light the photo properly",
       "Crop close to the required framing before compressing: bytes spent on background are wasted. Use even, bright lighting, because JPG compression amplifies the noise in dark photos and noisy photos compress worse.",
       "Do not screenshot your photo to shrink it. Screenshots change dimensions unpredictably and stack extra compression. Always work from the original image."],
     ["compress", "Step 3: compress to the target",
       `<p>Upload the cropped photo to the matching tool: <a href="/compress-image-to-50kb">compress to 50KB</a>, <a href="/compress-image-to-100kb">compress to 100KB</a>, or <a href="/compress-image-to-200kb">compress to 200KB</a>. The tool encodes, measures the real bytes, and retries until your photo fits under the limit at a JPG quality setting within the configured search range, then shows you the true final size.</p>`,
-      "iPhone HEIC photos work as input, and the output is always JPG, which is what these portals require. If a target is genuinely unreachable at usable quality, the tool says so instead of faking success."],
+      "HEIC photos work as input. Recompression produces JPG, but the original HEIC may be returned unchanged if recompression would increase its size. Check the downloaded format, byte count, dimensions, and visual quality against your application requirements."],
     ["verify", "Step 4: verify before the deadline",
       "After downloading, check the file's actual size on your device and confirm it is under the limit. Then test the upload well before any appointment or deadline. If the portal also enforces exact pixel dimensions and your photo differs, fix dimensions first in any photo editor, then re-compress."],
   ],
   [
     ["Will compressing to 50KB make my passport photo blurry?", "It can. A 50KB limit is tight, and compression or resizing may remove facial detail. Some applications require files larger than 50KB. Follow the exact application instructions and inspect the downloaded photo at full size."],
     ["The portal says my photo is too small. What happened?", "Some portals enforce a minimum size or minimum dimensions. Check for a stated minimum, and if your compressed file fell below it, use a larger target on our tools."],
-    ["Can I use a HEIC photo from my iPhone directly?", "Upload it to our compress tools directly, yes: the result comes back as a JPG, which is what the portal wants. Do not upload raw HEIC to a government portal; most reject it."],
+    ["Can I use a HEIC photo from my iPhone directly?", "The compressor accepts HEIC, but may return the original format unchanged if recompression would grow it. If your application requires JPG, use the dedicated HEIC to JPG converter and verify the result. Accepted formats differ by application."],
     ["What file format do passport portals want?", "Accepted formats depend on the application. Check its official instructions. Recompressed results use JPG, but the tool may return an original unchanged when recompression would increase file size."],
     ["Should I compress before or after cropping to the required size?", "Crop and set dimensions first, then compress. Bytes spent on background you will crop away are wasted, and dimension rules are separate from the KB limit."],
   ], {
@@ -564,7 +564,7 @@ article("convert-webp-to-jpg",
       "You right-clicked and saved an image from a website, and now Photoshop, your photo viewer, an upload form, or an older app refuses to open it. The file ends in .webp, a format Google built for fast web pages.",
       "Websites love WebP because it is around 25 to 35 percent smaller than JPG at the same visible quality, so pages load faster. Browsers all read it. But plenty of software outside the browser still does not, which leaves you holding an image you cannot use."],
     ["the-fix", "The 10-second fix",
-      `<p>Drop the file into our free <a href="/webp-to-jpg">WebP to JPG converter</a> and download the JPG. Quality 90 encoding, no signup, no watermark, and the upload auto-deletes within 30 minutes. Up to 30 WebP files convert in one batch, downloading as a single ZIP.</p>`,
+      `<p>Drop the file into our free <a href="/webp-to-jpg">WebP to JPG converter</a> and download the JPG. Quality 90 encoding, no signup, no watermark, and the upload is normally deleted within about 30 minutes. Up to 30 WebP files convert in one batch, downloading as a single ZIP.</p>`,
       "The JPG will usually be somewhat larger than the WebP was. That is normal: you are trading WebP's efficiency for JPG's universal compatibility."],
     ["avoid-it", "How to avoid getting WebP in the first place",
       "Some sites serve the same image in multiple formats, and a few tricks sometimes fetch the original JPG: try opening the image in a new tab and editing the URL to remove a .webp suffix or a format parameter. This works occasionally, not reliably.",
@@ -616,7 +616,7 @@ article("image-too-large-to-upload",
       "Upload forms, meanwhile, were often built years ago with small storage budgets. The mismatch is universal, which is why every busy portal shows this error to thousands of people a day."],
     ["the-fix", "Step 2: compress to the target",
       `<p>Use the tool matching your limit: <a href="/compress-image-to-200kb">200KB</a> for most portals, <a href="/compress-image-to-100kb">100KB</a> for stricter forms, <a href="/compress-image-to-50kb">50KB</a> for the tightest ones. Each runs a closed loop, encoding and measuring real bytes until your image fits within the configured JPG quality and resizing limits.</p>`,
-      "JPG, PNG, WebP, and iPhone HEIC all work as input. The output is a JPG, which every upload form accepts. If your limit is bigger (2MB, say) and your photo is 6MB, the 200KB tool still works and leaves you comfortable margin.",
+      "JPG, PNG, WebP, and HEIC work as input. Recompression produces JPG, but the original format may be returned unchanged. Check the actual destination format and size rules; choosing an unnecessarily low target can discard detail.",
       "The result screen shows the honest before and after sizes. If the target genuinely cannot be reached at usable quality, the tool says that instead of pretending."],
     ["common-traps", "The traps that keep people stuck",
       "Do not screenshot the image to shrink it: you lose dimensions unpredictably and stack compression artifacts. Do not run the same file through compression repeatedly: quality loss stacks with each pass, so always recompress from your original. Do not rename a .png to .jpg: forms check real file contents, and renaming changes nothing.",
@@ -700,7 +700,7 @@ fs.writeFileSync(path.join(pub, "llms.txt"),
 ## Cite-able facts
 - Site: ${SITE}
 - Price: free (USD 0), no account required
-- Privacy: TLS upload, server-side processing, are normally deleted within about 30 minutes; files are not kept for training or resale
+- Privacy: TLS upload, server-side processing, files are normally deleted within about 30 minutes; files are not kept for training or resale
 - Max upload: 25MB per image; batch convert up to 30 files / 150MB total, returned as one ZIP
 - Compress outputs: JPG when recompressed; original format when the unchanged-original fallback applies
 - Compress method: closed-loop encode, measure bytes, retry; never claims a target was hit when it was not
