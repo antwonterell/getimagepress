@@ -20,7 +20,7 @@ const brandSvg = `<svg viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="
 
 const header = `<header class="site-header"><div class="wrap nav"><a class="brand" href="/"><span class="brand-mark">${brandSvg}</span><span>getIMAGEpress</span></a><nav class="nav-links"><a href="/heic-to-jpg">HEIC to JPG</a><a href="/webp-to-jpg">WebP to JPG</a><a href="/compress-image-to-200kb">200KB</a><a href="/compress-image-to-100kb">100KB</a><a href="/learn">Learn</a></nav></div></header>`;
 
-const footer = `<footer class="site-footer"><div class="wrap footer-grid"><div><a class="brand" href="/"><span class="brand-mark">${brandSvg}</span><span>getIMAGEpress</span></a><p class="small">Free image converter and compressor for iPhone photos, web formats, and strict upload limits. Files are processed temporarily and auto-delete within 30 minutes.</p></div><div><b>Convert</b><a href="/heic-to-jpg">HEIC to JPG</a><a href="/heic-to-png">HEIC to PNG</a><a href="/webp-to-jpg">WebP to JPG</a><a href="/jpg-to-webp">JPG to WebP</a><a href="/png-to-webp">PNG to WebP</a><a href="/svg-to-png">SVG to PNG</a><a href="/jpg-to-png">JPG to PNG</a><a href="/png-to-jpg">PNG to JPG</a></div><div><b>Compress</b><a href="/compress-image-to-200kb">Compress to 200KB</a><a href="/compress-image-to-100kb">Compress to 100KB</a><a href="/compress-image-to-50kb">Compress to 50KB</a></div><div><b>Company</b><a href="/learn">Learn</a><a href="/about">About</a><a href="/privacy">Privacy</a><a href="/terms">Terms</a><a href="/contact">Contact</a></div></div></footer>`;
+const footer = `<footer class="site-footer"><div class="wrap footer-grid"><div><a class="brand" href="/"><span class="brand-mark">${brandSvg}</span><span>getIMAGEpress</span></a><p class="small">Free image converter and compressor for iPhone photos, web formats, and strict upload limits. Files are processed temporarily and are normally deleted within about 30 minutes.</p></div><div><b>Convert</b><a href="/heic-to-jpg">HEIC to JPG</a><a href="/heic-to-png">HEIC to PNG</a><a href="/webp-to-jpg">WebP to JPG</a><a href="/jpg-to-webp">JPG to WebP</a><a href="/png-to-webp">PNG to WebP</a><a href="/svg-to-png">SVG to PNG</a><a href="/jpg-to-png">JPG to PNG</a><a href="/png-to-jpg">PNG to JPG</a></div><div><b>Compress</b><a href="/compress-image-to-200kb">Compress to 200KB</a><a href="/compress-image-to-100kb">Compress to 100KB</a><a href="/compress-image-to-50kb">Compress to 50KB</a></div><div><b>Company</b><a href="/learn">Learn</a><a href="/about">About</a><a href="/privacy">Privacy</a><a href="/terms">Terms</a><a href="/contact">Contact</a></div></div></footer>`;
 
 function head(title, desc, pagePath, extraSchema) {
   const canonical = SITE + pagePath;
@@ -51,7 +51,7 @@ function toolCard({ mode, to, target, accept, btnLabel, note, cardNote }) {
   const targetNote = mode === "compress"
     ? `<p class="small">Target: ${target}KB. Best effort: if ${target}KB is not reachable at a usable size, you get the smallest usable result and an honest message.</p>`
     : `<p class="small">${cardNote || convertDefaults[to]}</p>`;
-  return `<div class="tool-card img-tool" ${dataAttrs}><div class="uploader"><div class="upload-icon">🖼️</div><h3>Choose or drop your image${multi ? "s" : ""}</h3><p class="small">${note || "Files upload to the getIMAGEpress server for processing, then auto-delete within 30 minutes. Do not upload images you are not allowed to process."}</p><p class="file-name small">No file selected</p><input class="file-input" type="file" accept="${accept}"${multi ? " multiple" : ""}></div>${targetNote}<button class="btn primary run-btn" type="button" disabled>${btnLabel}</button><div class="status"></div><div class="result"><div class="stats"><div class="stat"><span class="small">Original</span><strong class="original-size">0 KB</strong></div><div class="stat"><span class="small">Result</span><strong class="final-size">0 KB</strong></div><div class="stat"><span class="small">Change</span><strong class="saved-size">0%</strong></div></div><a class="btn primary download-link" href="#" onclick="window.getIMAGEpressDownloadComplete&&window.getIMAGEpressDownloadComplete()">Download image</a></div></div>`;
+  return `<div class="tool-card img-tool" ${dataAttrs}><div class="uploader"><div class="upload-icon">🖼️</div><h3>Choose or drop your image${multi ? "s" : ""}</h3><p class="small">${note || "Files upload to the getIMAGEpress server for processing, then are normally deleted within about 30 minutes. Do not upload images you are not allowed to process."}</p><p class="file-name small">No file selected</p><input class="file-input" type="file" accept="${accept}"${multi ? " multiple" : ""}></div>${targetNote}<button class="btn primary run-btn" type="button" disabled>${btnLabel}</button><div class="status"></div><div class="result"><div class="stats"><div class="stat"><span class="small">Original</span><strong class="original-size">0 KB</strong></div><div class="stat"><span class="small">Result</span><strong class="final-size">0 KB</strong></div><div class="stat"><span class="small">Change</span><strong class="saved-size">0%</strong></div></div><a class="btn primary download-link" href="#" onclick="window.getIMAGEpressDownloadComplete&&window.getIMAGEpressDownloadComplete()">Download image</a></div></div>`;
 }
 
 // ============================================
@@ -141,19 +141,19 @@ pages.push(toolPage({
   desc: "Convert HEIC, WebP, SVG, JPG, and PNG free. Compress images to 200KB, 100KB, or 50KB for upload forms. No signup, no watermarks, files auto-delete.",
   eyebrow: "Free, honest image tools",
   h1: "Convert and compress images, free",
-  lead: "getIMAGEpress converts HEIC, WebP, SVG, JPG, and PNG and compresses photos toward best-effort upload targets such as 100KB or 200KB. Every tool is free, needs no signup, and reports real before and after sizes. Uploaded files auto-delete within 30 minutes.",
+  lead: "getIMAGEpress converts HEIC, WebP, SVG, JPG, and PNG and compresses photos toward best-effort upload targets such as 100KB or 200KB. Every tool is free, needs no signup, and reports real before and after sizes. Uploaded files are normally deleted within about 30 minutes.",
   mode: "convert", to: "jpg",
   accept: ACCEPT_HEIC + ",.webp,.png,.jpg,.jpeg,.svg,.avif",
   btnLabel: "Convert to JPG",
-  note: "Drop any HEIC, WebP, PNG, JPG, SVG, or AVIF file here to get a JPG back. Files auto-delete within 30 minutes.",
+  note: "Drop any HEIC, WebP, PNG, JPG, SVG, or AVIF file here to get a JPG back. Files are normally deleted within about 30 minutes.",
   tips: [
     ["Built for real upload forms", "Job portals, government forms, passport applications, and school systems reject oversized images every day. Choose the target required by the form, then verify the downloaded size and image quality. A target is not a guaranteed result."],
     ["iPhone photos welcome", "iPhones shoot HEIC by default and half the internet cannot open it. HEIC to JPG is the fastest fix, and it runs on every file you drop here."],
-    ["Nothing to install", "Everything runs in your browser plus our server. No app, no account, no watermark, and your files auto-delete within 30 minutes."],
+    ["Nothing to install", "Everything runs in your browser plus our server. No app, no account, no watermark, and your files are normally deleted within about 30 minutes."],
   ],
   faqs: [
     ["Is getIMAGEpress really free?", "Yes. Every tool on this site is free with no signup, no watermarks, and a 25MB per-image cap. Batch conversion is limited to 30 files and 150MB total; rate limits also apply."],
-    ["What happens to my images?", "They upload over an encrypted connection, get processed on our server, and auto-delete within 30 minutes. We do not view, share, or keep them."],
+    ["What happens to my images?", "They upload over an encrypted connection, get processed on our server, and are normally deleted within about 30 minutes. We do not view, share, or keep them."],
     ["Which formats can I convert?", "Input: HEIC, HEIF, AVIF, WebP, JPG, PNG, and SVG. Output: JPG, PNG, or WebP. Compression normally produces JPG, but may return your original format unchanged if recompression would increase file size. Check the destination format rules."],
     ["Why did my converted file get bigger?", "Some conversions genuinely increase file size. HEIC and WebP are more efficient than JPG, so converting them to JPG usually grows the file. We always show the real before and after sizes."],
   ],
@@ -162,7 +162,7 @@ pages.push(toolPage({
 pages.push(toolPage({
   slug: "heic-to-jpg",
   title: "HEIC to JPG Converter Free | getIMAGEpress",
-  desc: "Convert iPhone HEIC photos to JPG online free. Works on Windows, Mac, and Android. No signup, no watermarks, files auto-delete within 30 minutes.",
+  desc: "Convert iPhone HEIC photos to JPG online free. Works on Windows, Mac, and Android. No signup, no watermarks, files are normally deleted within about 30 minutes.",
   eyebrow: "For iPhone photos",
   h1: "Convert HEIC to JPG",
   lead: "Turn iPhone HEIC photos into JPG files that open anywhere: Windows, Android, web forms, email, and older apps.",
@@ -174,7 +174,7 @@ pages.push(toolPage({
     ["What is a HEIC file?", "HEIC is the High Efficiency Image Container format that iPhones use by default. It stores photos at roughly half the size of JPG with the same quality, but many websites, Windows apps, and upload forms cannot open it."],
     ["Will converting HEIC to JPG lose quality?", "JPG re-encoding can lose detail. We use quality 90, but visible differences and output size depend on the source image. Inspect fine detail and color before using the converted copy."],
     ["How do I stop my iPhone from shooting HEIC?", "Open Settings, tap Camera, tap Formats, and choose Most Compatible. New photos will save as JPG. Existing HEIC photos still need converting, which is what this tool is for."],
-    ["Is this private?", "Yes. Files upload over TLS, get converted on our server, and auto-delete within 30 minutes. No signup, no watermarks, and we never look at your photos."],
+    ["Is this private?", "Yes. Files upload over TLS, get converted on our server, and are normally deleted within about 30 minutes. No signup, no watermarks, and we never look at your photos."],
     ["Does this work on iPhone Safari?", "Yes. Open this page in Safari, tap the uploader, and pick photos straight from your library. You can select a whole batch of vacation photos and get one ZIP of JPGs back."],
     ["Why is the JPG bigger than my HEIC?", "HEIC uses the modern HEVC codec, which packs the same picture into about half the bytes of 1992-era JPG compression. A larger JPG is the normal, expected cost of universal compatibility, not a bug."],
   ],
@@ -183,7 +183,7 @@ pages.push(toolPage({
 pages.push(toolPage({
   slug: "heic-to-png",
   title: "HEIC to PNG Converter Free | getIMAGEpress",
-  desc: "Convert iPhone HEIC photos to lossless PNG online free. No signup, no watermarks, files auto-delete within 30 minutes.",
+  desc: "Convert iPhone HEIC photos to lossless PNG online free. No signup, no watermarks, files are normally deleted within about 30 minutes.",
   eyebrow: "For iPhone photos",
   h1: "Convert HEIC to PNG",
   lead: "Turn iPhone HEIC photos into lossless PNG files for editing, transparency work, or tools that only accept PNG.",
@@ -238,7 +238,7 @@ pages.push(toolPage({
 pages.push(toolPage({
   slug: "png-to-webp",
   title: "PNG to WebP Converter Free | getIMAGEpress",
-  desc: "Convert PNG images to WebP online free. Big savings for screenshots and graphics. No signup, files auto-delete within 30 minutes.",
+  desc: "Convert PNG images to WebP online free. Big savings for screenshots and graphics. No signup, files are normally deleted within about 30 minutes.",
   eyebrow: "For faster websites",
   h1: "Convert PNG to WebP",
   lead: "PNG screenshots and graphics are often huge. WebP keeps them sharp at a fraction of the size, transparency included.",
@@ -256,7 +256,7 @@ pages.push(toolPage({
 pages.push(toolPage({
   slug: "svg-to-png",
   title: "SVG to PNG Converter Free | getIMAGEpress",
-  desc: "Convert SVG vector graphics to PNG online free. Clean rasterization with transparency. No signup, files auto-delete within 30 minutes.",
+  desc: "Convert SVG vector graphics to PNG online free. Clean rasterization with transparency. No signup, files are normally deleted within about 30 minutes.",
   eyebrow: "For vector graphics",
   h1: "Convert SVG to PNG",
   lead: "Turn SVG logos and icons into PNG images for apps, documents, and platforms that do not accept vectors.",
@@ -278,7 +278,7 @@ pages.push(toolPage({
 pages.push(toolPage({
   slug: "jpg-to-png",
   title: "JPG to PNG Converter Free | getIMAGEpress",
-  desc: "Convert JPG images to lossless PNG online free. No signup, no watermarks, files auto-delete within 30 minutes.",
+  desc: "Convert JPG images to lossless PNG online free. No signup, no watermarks, files are normally deleted within about 30 minutes.",
   eyebrow: "Format conversion",
   h1: "Convert JPG to PNG",
   lead: "Convert JPG photos into lossless PNG for editing pipelines and tools that require PNG input.",
@@ -296,7 +296,7 @@ pages.push(toolPage({
 pages.push(toolPage({
   slug: "png-to-jpg",
   title: "PNG to JPG Converter Free | getIMAGEpress",
-  desc: "Convert PNG images to JPG for compatible sharing and uploads. File size may increase or decrease. No signup, files auto-delete within 30 minutes.",
+  desc: "Convert PNG images to JPG for compatible sharing and uploads. File size may increase or decrease. No signup, files are normally deleted within about 30 minutes.",
   eyebrow: "Format conversion",
   h1: "Convert PNG to JPG",
   lead: "Convert PNG files to JPG for apps and forms that require JPG. This changes the format; it does not guarantee a smaller file. Transparent areas become white. Need a size limit? Try our <a href='/compress-image-to-200kb'>200KB</a> or <a href='/compress-image-to-100kb'>100KB</a> compression tools; targets are best-effort.",
@@ -357,7 +357,7 @@ function infoPage(slug, title, desc, h1, bodyHtml) {
 
 infoPage("about", "About | getIMAGEpress", "What getIMAGEpress is, how it works, and the promises we make.", "About getIMAGEpress",
   `<p class="lead">getIMAGEpress is a free image converter and compressor built around one idea: tell users the truth.</p>
-  <div class="card" style="margin-top:18px"><h3>What we promise</h3><ul class="checklist"><li>Real before and after file sizes on every result, even when a conversion makes the file bigger.</li><li>Best-effort targets, honestly reported. If your image cannot reach 50KB at a usable size, we say so.</li><li>Files auto-delete within 30 minutes. The cleanup job runs every 5 minutes and removes anything older than 25 minutes.</li><li>No signup, no watermarks, no fake urgency, no invented user counts.</li></ul></div>
+  <div class="card" style="margin-top:18px"><h3>What we promise</h3><ul class="checklist"><li>Real before and after file sizes on every result, even when a conversion makes the file bigger.</li><li>Best-effort targets, honestly reported. If your image cannot reach 50KB at a usable size, we say so.</li><li>Files are normally deleted within about 30 minutes. The cleanup job checks every 5 minutes for files older than 25 minutes; interruptions or deletion errors can delay removal.</li><li>No signup, no watermarks, no fake urgency, no invented user counts.</li></ul></div>
   <div class="card" style="margin-top:18px"><h3>How it works</h3><p>Your image uploads over an encrypted connection to our server, where it is converted or compressed using the sharp image library (plus a WASM HEIC decoder for iPhone photos). The result streams straight back to your browser. Uploads are capped at 25MB.</p></div>
   <p style="margin-top:18px">getIMAGEpress is the sister site of <a href="https://getpdfpress.com">getPDFpress</a>, which does the same honest job for PDF files.</p>`);
 
@@ -367,7 +367,7 @@ infoPage("contact", "Contact | getIMAGEpress", "How to reach getIMAGEpress.", "C
 
 infoPage("privacy", "Privacy Policy | getIMAGEpress", "What getIMAGEpress collects, what it does not, and how long files live.", "Privacy Policy",
   `<p class="small">Last updated: July 21, 2026</p>
-  <div class="card" style="margin-top:18px"><h3>Your files</h3><p>Uploaded images are stored temporarily on our server only for processing. A cleanup job runs every 5 minutes and deletes any file older than 25 minutes, so every upload is gone within 30 minutes. We do not view, share, sell, or back up your files.</p></div>
+  <div class="card" style="margin-top:18px"><h3>Your files</h3><p>Uploaded images are stored temporarily on our server only for processing. A cleanup job runs every 5 minutes and deletes any file older than 25 minutes, so removal is normally expected within about 30 minutes while the service is running. Restarts, service interruptions, or deletion errors may delay cleanup. We do not view, share, sell, or back up your files.</p></div>
   <div class="card" style="margin-top:18px"><h3>What we collect</h3><p>Standard server logs (IP address, request path, timestamp) for abuse prevention and debugging, retained briefly. We use Google Analytics 4 to understand which tools people use. Google uses IP addresses during collection to derive location; GA4 does not log or store individual IP addresses. No accounts exist, so we hold no personal profiles.</p></div>
   <div class="card" style="margin-top:18px"><h3>Cookies</h3><p>We set no cookies ourselves. Google Analytics may set its own cookies; see <a href="https://support.google.com/analytics/answer/6004245?hl=en">Google's Analytics privacy documentation</a> for details.</p></div>
   <div class="card" style="margin-top:18px"><h3>Contact</h3><p>Privacy questions: <a href="mailto:antwonterell@gmail.com">antwonterell@gmail.com</a></p></div>`);
@@ -695,12 +695,12 @@ Sitemap: ${SITE}/sitemap.xml
 fs.writeFileSync(path.join(pub, "llms.txt"),
 `# getIMAGEpress
 
-> Free online image converter and compressor at ${SITE}. No signup, no watermarks, uploads auto-delete within 30 minutes. Max file size 25MB per image. Honest best-effort results with real before and after sizes shown every time.
+> Free online image converter and compressor at ${SITE}. No signup, no watermarks, uploads are normally deleted within about 30 minutes. Max file size 25MB per image. Honest best-effort results with real before and after sizes shown every time.
 
 ## Cite-able facts
 - Site: ${SITE}
 - Price: free (USD 0), no account required
-- Privacy: TLS upload, server-side processing, auto-delete within 30 minutes; files are not kept for training or resale
+- Privacy: TLS upload, server-side processing, are normally deleted within about 30 minutes; files are not kept for training or resale
 - Max upload: 25MB per image; batch convert up to 30 files / 150MB total, returned as one ZIP
 - Compress outputs: JPG when recompressed; original format when the unchanged-original fallback applies
 - Compress method: closed-loop encode, measure bytes, retry; never claims a target was hit when it was not
