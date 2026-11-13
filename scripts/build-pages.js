@@ -45,8 +45,8 @@ function toolCard({ mode, to, target, accept, btnLabel, note, cardNote }) {
   // The honest info block: sits below the uploader, above the button, on every tool.
   const convertDefaults = {
     jpg: "Output: JPG at quality 90. Select up to 30 files at once; multiple files download as one ZIP. Real before and after sizes shown, even when the converted file comes out larger.",
-    png: "Output: lossless PNG, every pixel preserved. Select up to 30 files at once; multiple files download as one ZIP. PNG files run large by design, and we show you the real sizes.",
-    webp: "Output: WebP at quality 82, the web sweet spot. Select up to 30 files at once; multiple files download as one ZIP. Real before and after sizes shown.",
+    png: "Output: PNG with lossless encoding after decoding and orientation handling. Select up to 30 files at once; multiple files download as one ZIP. PNG files run large by design, and we show you the real sizes.",
+    webp: "Output: WebP at quality 82. Select up to 30 files at once; multiple files download as one ZIP. Real before and after sizes shown.",
   };
   const targetNote = mode === "compress"
     ? `<p class="small">Target: ${target}KB. Best effort: if ${target}KB is not reached within the configured compression attempts, you get a best-effort result and a warning. Inspect visual quality yourself; the tool does not assess readability.</p>`
@@ -115,6 +115,7 @@ function toolPage(def) {
   if (tips && tips.length) {
     html += `<section class="section"><div class="wrap grid cards-3">` + tips.map(([t, b]) => `<article class="card"><h3>${t}</h3><p>${b}</p></article>`).join("") + `</div></section>`;
   }
+  if (["index", "png-to-jpg", "png-to-webp", "compress-image-to-50kb", "compress-image-to-100kb", "compress-image-to-200kb"].includes(slug)) html += `<section class="section"><div class="wrap card"><h2>See actual conversion examples</h2><p>Compare downloadable originals and measured outputs: transparent PNG to JPG or WebP, plus one deliberately difficult texture at three size targets. These are original synthetic test images, not a promise about your photo.</p><a href="/learn/image-conversion-worked-examples">View examples, exact bytes and limitations</a></div></section>`;
   html += faqHtml;
   html += `</main>${footer}<script src="/app.js?v=20261023-events" defer></script></body></html>`;
   const file = slug === "index" ? "index.html" : `${slug}.html`;
@@ -148,7 +149,7 @@ pages.push(toolPage({
   note: "Drop any HEIC, WebP, PNG, JPG, SVG, or AVIF file here to get a JPG back. Files are normally deleted within about 30 minutes.",
   tips: [
     ["Built for real upload forms", "Job portals, government forms, passport applications, and school systems reject oversized images every day. Choose the target required by the form, then verify the downloaded size and image quality. A target is not a guaranteed result."],
-    ["iPhone photos welcome", "iPhones shoot HEIC by default and half the internet cannot open it. HEIC to JPG is the fastest fix, and it runs on every file you drop here."],
+    ["iPhone photos welcome", "An iPhone using High Efficiency capture may save HEIC photos. If your destination does not support HEIC, try JPG conversion. Damaged files and unsupported variants may fail; check the downloaded result before deleting your original."],
     ["Nothing to install", "Everything runs in your browser plus our server. No app, no account, no watermark, and your files are normally deleted within about 30 minutes."],
   ],
   faqs: [
@@ -194,7 +195,7 @@ pages.push(toolPage({
   faqs: [
     ["When should I pick PNG instead of JPG?", "Pick PNG when you plan to edit the image further, need transparency support, or a tool specifically requires PNG. For sharing photos or uploading to forms, JPG is smaller and more widely accepted."],
     ["Why is the PNG so much bigger than my HEIC?", "PNG is lossless, so a 2MB HEIC photo can become a 10MB or larger PNG. That is normal and expected. If file size matters, use HEIC to JPG instead."],
-    ["Does this keep photo quality?", "Yes. PNG is lossless, so every pixel decoded from your HEIC is preserved exactly."],
+    ["Does this keep photo quality?", "PNG uses lossless encoding, but converting HEIC can change orientation, color interpretation, metadata, or HDR appearance. Keep the original HEIC if those properties matter. Conversion cannot recover detail already lost in the source."],
   ],
 }));
 
@@ -398,7 +399,7 @@ function article(slug, title, desc, h1, sections, faqs, opts) {
   const ctaHtml = opts.cta || "";
   const articleSchema = {
     "@context": "https://schema.org", "@type": "Article", "headline": h1,
-    "datePublished": TODAY, "dateModified": TODAY,
+    "datePublished": opts.published || TODAY, "dateModified": opts.modified || TODAY,
     "author": { "@type": "Organization", "name": "getIMAGEpress", "url": SITE + "/" },
     "publisher": { "@type": "Organization", "name": "getIMAGEpress" },
     "mainEntityOfPage": SITE + pagePath,
@@ -634,6 +635,35 @@ article("image-too-large-to-upload",
   });
 
 // Learn index
+
+const measured = JSON.parse(fs.readFileSync(path.join(pub, 'examples/measured-results.json'), 'utf8'));
+const exampleRows = measured.records.map(r => '<tr><td><a href="/examples/'+r.filename+'">'+r.filename+'</a></td><td>'+r.bytes.toLocaleString('en-US')+'</td><td>'+r.width+' × '+r.height+'</td><td>'+(r.targetBytes ? r.targetBytes.toLocaleString('en-US')+' bytes; quality '+r.quality : r.hasAlpha ? 'Transparency present' : 'No alpha channel')+'</td></tr>').join('');
+article('image-conversion-worked-examples',
+  'Image conversion worked examples: real bytes and transparency | getIMAGEpress',
+  'Download original synthetic images and measured local conversion outputs. See PNG transparency, JPG size increases and compression trade-offs.',
+  'Image conversion worked examples: what actually changes', [
+  ['method','What we tested and what this does not prove',
+    'On November 13, 2026 we tested the getIMAGEpress conversion and compression API locally with two original synthetic images: a transparent geometric graphic and a deliberately noisy texture. We used the same server code as the site, with isolated temporary storage. These are not camera photographs, user uploads, a production speed test, or evidence that every supported file works.',
+    'The purpose is to make specific trade-offs visible and reproducible. Download the originals below and try them in the relevant tool. Results can change when encoders or settings change. The measurements describe these exact files only.'],
+  ['transparency','A transparent PNG becomes white in JPG',
+    '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px"><figure style="margin:0;background:#e4e4e4;padding:12px"><img src="/examples/transparent-shapes.png" alt="Original teal and gold geometric artwork, transparent outside the shapes" width="640" height="400" style="width:100%;height:auto"><figcaption>Original PNG shown on gray so transparency is visible.</figcaption></figure><figure style="margin:0;background:#e4e4e4;padding:12px"><img src="/examples/transparent-shapes.jpg" alt="Converted geometric artwork with an opaque white background" width="640" height="400" style="width:100%;height:auto"><figcaption>JPG output: transparent areas become white.</figcaption></figure></div>',
+    'The PNG was 7,298 bytes. JPG at the tool default quality 90 was 8,319 bytes, about 14% larger. Changing the extension did not make this simple graphic smaller. The JPG had no alpha channel, and the white background is a conversion choice, not a display error.',
+    'WebP at quality 82 was 3,376 bytes and retained an alpha channel. That is useful when the destination supports WebP and transparent edges matter. It is lossy encoding: a smaller file and retained transparency do not establish pixel-for-pixel equality.',
+    '<p><a href="/png-to-jpg">Use PNG to JPG</a> only when your destination needs JPG and a white background is acceptable. <a href="/png-to-webp">Use PNG to WebP</a> when your destination supports it. Keep the original for editing.</p>'],
+  ['targets','One difficult texture, three byte targets',
+    '<figure style="margin:0"><img src="/examples/texture-original.jpg" alt="Original deliberately noisy multicolor synthetic texture used for compression testing" width="1400" height="1000" loading="lazy" style="width:100%;max-width:560px;height:auto"><figcaption>Synthetic stress example, not a photograph or a recommended upload.</figcaption></figure>',
+    'The texture started at 1,416,016 bytes and 1400 by 1000 pixels. All three tested targets were met without changing those pixel dimensions, but the selected JPEG qualities were only 12, 17 and 29. Those numbers are encoder settings, not percentages of visual quality. Heavy compression can remove detail even when dimensions remain unchanged.',
+    'For these tools a 50KB target means 51,200 bytes, 100KB means 102,400 bytes, and 200KB means 204,800 bytes. Some portals use decimal limits instead, such as 100,000 bytes. Compare the exact output byte count with your destination requirement. Do not assume the label alone guarantees acceptance.',
+    '<p>Download the original and outputs, open them at 100% zoom, and compare fine detail. Use <a href="/compress-image-to-100kb">100KB compression</a> only if that target fits the actual requirement. A form can reject a file for dimensions, format, content, or photo-editing rules even when its size passes.</p>'],
+  ['results','Download and compare the measured files',
+    '<div style="overflow-x:auto"><table><caption>Measured locally on November 13, 2026. Bytes are exact.</caption><thead><tr><th>Download</th><th>Bytes</th><th>Pixels</th><th>Result or setting</th></tr></thead><tbody>'+exampleRows+'</tbody></table></div>',
+    '<p><a href="/examples/measured-results.json">Download the machine-readable measurements</a>. The geometric graphic and texture were created for these tests. No third-party photograph or customer file is included.</p>'],
+  ['checks','A practical check before you submit an image',
+    'First read the destination rules: accepted formats, maximum bytes, minimum dimensions, transparency, and whether editing is permitted. Save a separate copy of your original. After converting, check the actual file type and byte count, then inspect the image at full size for unreadable text, damaged edges, incorrect colors, rotation, and unintended backgrounds.',
+    'Compression makes a bounded set of attempts, not an exhaustive search over all possible images. A missed target is not proof that the file cannot be reduced further. Smaller dimensions or lower quality can cost detail; use another workflow if the destination requires properties this tool cannot preserve.',
+    'These examples demonstrate selected behavior, not a universal quality guarantee or a guarantee that a government or application portal will accept your file.']
+  ], [], {published:'2026-11-13',modified:'2026-11-13',opener:'A file converter should show its trade-offs. Here are original examples, downloadable before-and-after files, exact byte counts, and the limits of what the results mean.'});
+
 {
   const cards = articles.map(a => `<a class="tool-link" href="/learn/${a.slug}"><b>${a.title}</b><span class="small">${a.desc}</span></a>`).join("");
   const learnFaqs = [
@@ -657,7 +687,7 @@ article("image-too-large-to-upload",
 const sitemapUrls = pages.filter(p => p !== "/404");
 fs.writeFileSync(path.join(pub, "sitemap.xml"),
   `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +
-  sitemapUrls.map(p => `  <url><loc>${SITE}${p}</loc><lastmod>${TODAY}</lastmod></url>`).join("\n") +
+  sitemapUrls.map(p => `  <url><loc>${SITE}${p}</loc><lastmod>${p === "/learn/image-conversion-worked-examples" ? "2026-11-13" : TODAY}</lastmod></url>`).join("\n") +
   `\n</urlset>\n`);
 
 fs.writeFileSync(path.join(pub, "robots.txt"),

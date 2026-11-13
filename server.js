@@ -734,7 +734,7 @@ app.post("/api/compress-image", upload.single("file"), requireImageType(COMPRESS
     };
     if (!hitTarget) {
       headers["X-Target-Miss"] = "true";
-      headers["X-Warning-Message"] = `Compressed to ${bestKB}KB, the smallest this image can go while staying usable. The ${targetKB}KB target was not reachable without shrinking below 200px.`;
+      headers["X-Warning-Message"] = `Compressed to ${bestKB}KB, the smallest result found in this attempt. The ${targetKB}KB target was not met. Further resizing or lower quality may reduce detail.`;
     }
     res.set(headers);
 

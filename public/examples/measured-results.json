@@ -1,0 +1,64 @@
+{
+  "date": "2026-11-13",
+  "method": "Local API test with original synthetic artwork, not a real photograph or production benchmark",
+  "records": [
+    {
+      "filename": "transparent-shapes.png",
+      "bytes": 7298,
+      "width": 640,
+      "height": 400,
+      "hasAlpha": true
+    },
+    {
+      "filename": "transparent-shapes.jpg",
+      "bytes": 8319,
+      "width": 640,
+      "height": 400,
+      "hasAlpha": false
+    },
+    {
+      "filename": "transparent-shapes.webp",
+      "bytes": 3376,
+      "width": 640,
+      "height": 400,
+      "hasAlpha": true
+    },
+    {
+      "filename": "texture-original.jpg",
+      "bytes": 1416016,
+      "width": 1400,
+      "height": 1000,
+      "hasAlpha": false
+    },
+    {
+      "filename": "texture-50kb.jpg",
+      "bytes": 50325,
+      "width": 1400,
+      "height": 1000,
+      "targetBytes": 51200,
+      "quality": "12",
+      "method": "closed-loop-jpeg",
+      "targetMiss": null
+    },
+    {
+      "filename": "texture-100kb.jpg",
+      "bytes": 96377,
+      "width": 1400,
+      "height": 1000,
+      "targetBytes": 102400,
+      "quality": "17",
+      "method": "closed-loop-jpeg",
+      "targetMiss": null
+    },
+    {
+      "filename": "texture-200kb.jpg",
+      "bytes": 201862,
+      "width": 1400,
+      "height": 1000,
+      "targetBytes": 204800,
+      "quality": "29",
+      "method": "closed-loop-jpeg",
+      "targetMiss": null
+    }
+  ]
+}
